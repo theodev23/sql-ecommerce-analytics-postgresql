@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Environment variables and secrets
+.env
+.env.*
+
+# PostgreSQL temporary files and dumps
+*.dump
+*.backup
+*.sql.gz
+
+# Full raw datasets
+data/*.csv
+data/*.xlsx
+data/*.xls
+
+# Keep the future sample dataset
+!data/sample_online_retail.csv
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.log
