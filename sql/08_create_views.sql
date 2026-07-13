@@ -42,6 +42,8 @@ SELECT
     fact.product_key,
     product_dimension.stock_code,
     product_dimension.product_description,
+    product_dimension.product_category,
+    product_dimension.is_merchandise,
 
     fact.country_key,
     country_dimension.country_name,
@@ -439,6 +441,8 @@ SELECT
     product_key,
     stock_code,
     product_description,
+    product_category,
+    is_merchandise,
 
     COUNT(DISTINCT invoice_no) FILTER (
         WHERE is_positive_sale
@@ -463,6 +467,13 @@ SELECT
             0
         )
     ) AS cancelled_quantity,
+
+    COALESCE(
+        SUM(quantity) FILTER (
+            WHERE record_type IN ('SALE', 'CANCELLATION')
+        ),
+        0
+    ) AS net_quantity,
 
     ABS(
         COALESCE(
@@ -533,7 +544,9 @@ WHERE product_key <> 0
 GROUP BY
     product_key,
     stock_code,
-    product_description;
+    product_description,
+    product_category,
+    is_merchandise;
 
 COMMENT ON VIEW analytics.v_product_kpis IS
     'Sales, returns and stock-adjustment indicators grouped by product.';
