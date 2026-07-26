@@ -339,7 +339,8 @@ More detailed conclusions are available in:
     ├── results/
     │   └── key_insights.md
     ├── scripts/
-    │   └── convert_xlsx_to_csv.py
+    │   ├── convert_xlsx_to_csv.py
+    │   └── run_pipeline.sh
     └── sql/
         ├── 01_create_schemas.sql
         ├── 02_create_raw_table.sql
