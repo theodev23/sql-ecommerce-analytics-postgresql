@@ -349,7 +349,8 @@ More detailed conclusions are available in:
         ├── 06_create_dimensions.sql
         ├── 07_create_fact_sales.sql
         ├── 08_create_views.sql
-        └── 09_analysis_queries.sql
+        ├── 09_analysis_queries.sql
+        └── 10_validate_pipeline.sql
 
 ## How to run the project
 
@@ -406,6 +407,11 @@ Run the commands from the repository root:
     psql -v ON_ERROR_STOP=1 -d ecommerce_dw -f sql/07_create_fact_sales.sql
     psql -v ON_ERROR_STOP=1 -d ecommerce_dw -f sql/08_create_views.sql
     psql -v ON_ERROR_STOP=1 -d ecommerce_dw -f sql/09_analysis_queries.sql
+    psql -v ON_ERROR_STOP=1 -d ecommerce_dw -f sql/10_validate_pipeline.sql
+
+The complete pipeline can also be executed with:
+
+    ./scripts/run_pipeline.sh ecommerce_dw
 
 The import script uses the relative path:
 
