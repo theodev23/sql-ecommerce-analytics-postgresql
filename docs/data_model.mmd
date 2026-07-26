@@ -1,0 +1,95 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "primaryTextColor": "#172033",
+    "lineColor": "#64748b",
+    "clusterBkg": "#f8fafc",
+    "clusterBorder": "#cbd5e1"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "nodeSpacing": 35,
+    "rankSpacing": 55
+  }
+}}%%
+
+flowchart LR
+
+    subgraph SOURCE["SOURCE"]
+        direction TB
+        XLSX["Online Retail.xlsx<br/>541,909 source rows"]
+        CSV["online_retail.csv<br/>UTF-8 conversion"]
+        XLSX --> CSV
+    end
+
+    subgraph RAW["RAW"]
+        RAW_TABLE["raw.online_retail<br/>541,909 rows<br/>source values stored as text"]
+    end
+
+    subgraph STAGING["STAGING"]
+        STG_TABLE["staging.transactions<br/>541,909 typed rows<br/>normalization and quality flags"]
+    end
+
+    subgraph WAREHOUSE["STAR SCHEMA"]
+        direction TB
+
+        DATE["dim_date<br/>375 rows"]
+        CUSTOMER["dim_customer<br/>4,373 rows"]
+        PRODUCT["dim_product<br/>3,959 normalized codes"]
+        COUNTRY["dim_country<br/>39 rows"]
+
+        FACT["fact_sales<br/>536,641 deduplicated<br/>transaction lines"]
+
+        DATE -->|"date_key"| FACT
+        CUSTOMER -->|"customer_key"| FACT
+        PRODUCT -->|"product_key"| FACT
+        COUNTRY -->|"country_key"| FACT
+    end
+
+    subgraph ANALYTICS["ANALYTICS"]
+        direction TB
+
+        ENRICHED["v_sales_enriched"]
+        ORDERS["v_order_summary"]
+        KPI["KPI views<br/>overview - monthly - country<br/>product - customer"]
+        ADVANCED["Advanced SQL analyses<br/>window functions - rankings - RFM"]
+        INSIGHTS["Business insights<br/>results/key_insights.md"]
+
+        ENRICHED --> ORDERS
+        ENRICHED --> KPI
+        ORDERS --> KPI
+        KPI --> ADVANCED
+        ADVANCED --> INSIGHTS
+    end
+
+    CSV --> RAW_TABLE
+    RAW_TABLE --> STG_TABLE
+
+    STG_TABLE --> DATE
+    STG_TABLE --> CUSTOMER
+    STG_TABLE --> PRODUCT
+    STG_TABLE --> COUNTRY
+    STG_TABLE --> FACT
+
+    FACT --> ENRICHED
+    DATE --> ENRICHED
+    CUSTOMER --> ENRICHED
+    PRODUCT --> ENRICHED
+    COUNTRY --> ENRICHED
+
+    classDef sourceNode fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px,color:#172033;
+    classDef rawNode fill:#fee2e2,stroke:#dc2626,stroke-width:1.5px,color:#7f1d1d;
+    classDef stagingNode fill:#fef3c7,stroke:#d97706,stroke-width:1.5px,color:#78350f;
+    classDef dimensionNode fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px,color:#14532d;
+    classDef factNode fill:#dbeafe,stroke:#2563eb,stroke-width:2.5px,color:#1e3a8a;
+    classDef analyticsNode fill:#ede9fe,stroke:#7c3aed,stroke-width:1.5px,color:#4c1d95;
+    classDef outputNode fill:#cffafe,stroke:#0891b2,stroke-width:1.5px,color:#164e63;
+
+    class XLSX,CSV sourceNode;
+    class RAW_TABLE rawNode;
+    class STG_TABLE stagingNode;
+    class DATE,CUSTOMER,PRODUCT,COUNTRY dimensionNode;
+    class FACT factNode;
+    class ENRICHED,ORDERS,KPI,ADVANCED analyticsNode;
+    class INSIGHTS outputNode;
