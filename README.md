@@ -511,5 +511,3 @@ Key scripts use:
 ## Author
 
 **Théo Devarenne**
-
-This project was created as part of a professional transition toward data engineering and demonstrates practical SQL, PostgreSQL, data modelling and analytical skills.
